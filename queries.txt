@@ -1,0 +1,10 @@
+
+--Query to return FAU ETDs based on URL for the Wordle project
+/*
+select a.BIB_DOC, t.DISPLAY_TITLE, t.TITLE, t.SUBTITLE, '0'||a.BIB_DOC||'UXU01', b.Z00R_TEXT
+from SB.AL_KEY_LINKS a
+join SB.U01Z00R_856 b on a.BIB_DOC = b.Z00R_DOC_NUMBER
+join SB.AL_TITLES t on a.BIB_DOC = t.BIB_DOC_NUM
+where a.INST = 'FA'
+and b.Z00R_TEXT like '%purl.fcla.edu/FAU%'
+*/
