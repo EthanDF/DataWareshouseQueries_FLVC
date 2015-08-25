@@ -8,3 +8,30 @@ join SB.AL_TITLES t on a.BIB_DOC = t.BIB_DOC_NUM
 where a.INST = 'FA'
 and b.Z00R_TEXT like '%purl.fcla.edu/FAU%'
 */
+
+--Query to find records with both a CIS and OCoLC system number (035) and is only held by one school.
+--Note that the counts can be duplicated by a suppressed holdings
+--see also cis_bibs.csv
+
+select a.BIB_DOC
+,count(distinct b.Z00R_TEXT) Ctrl_Fields
+,sum(case when b.Z00R_TEXT like '%cis%' then 1 else 0 end) CIS_Bibs
+,sum(case when b.Z00R_TEXT like '%(OCoLC)%' then 1 else 0 end ) OCLC_Bibs
+from SB.AL_KEY_LINKS a
+join SB.U01Z00R_TMP b on a.BIB_DOC = b.Z00R_DOC_NUMBER
+where 1=1
+and a.INST != 'FA'
+and b.Z00R_FIELD_CODE = '035  '
+and a.bib_doc in(
+  select a.BIB_DOC
+  from SB.AL_KEY_LINKS a
+  join SB.AL_HOL_LOCN c on a.HOL_DOC = c.HOL_DOC_NUM
+  left join SB.AL_STA d on c.HOL_DOC_NUM = d.HOL_DOC_NUM
+  where 1=1 
+  and d.HOL_DOC_NUM is null
+  group by a.BIB_DOC
+  having count(c.HOL_DOC_NUM) = 1
+  )
+group by a.BIB_DOC
+having sum(case when b.Z00R_TEXT like '%cis%' then 1 else 0 end) >= 1
+and sum(case when b.Z00R_TEXT like '%(OCoLC)%' then 1 else 0 end) >= 1;
