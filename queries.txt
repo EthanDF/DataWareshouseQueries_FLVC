@@ -35,3 +35,13 @@ and a.bib_doc in(
 group by a.BIB_DOC
 having sum(case when b.Z00R_TEXT like '%cis%' then 1 else 0 end) >= 1
 and sum(case when b.Z00R_TEXT like '%(OCoLC)%' then 1 else 0 end) >= 1;
+
+--query to find records with both an 035 tag value with (dli)HEB and and OCLC number
+/*
+select a.Z00R_DOC_NUMBER, a.Z00R_TEXT, b.OCLC_NUM
+from SB.U01Z00R_TMP a
+join SB.AL_OCLC b on TO_NUMBER(a.Z00R_DOC_NUMBER) = b.BIB_DOC_NUM
+--join SB.AL_HOL_LOCN c on b.BIB_DOC_NUM = c.BIB_DOC_NUM and c.INST = 'FA'
+where a.Z00R_FIELD_CODE = '035   '
+and a.Z00R_TEXT like '$$a(dli)HEB%'
+*/
