@@ -45,3 +45,23 @@ join SB.AL_OCLC b on TO_NUMBER(a.Z00R_DOC_NUMBER) = b.BIB_DOC_NUM
 where a.Z00R_FIELD_CODE = '035   '
 and a.Z00R_TEXT like '$$a(dli)HEB%'
 */
+
+--Query to return FAU Theses and Dissertations based on Specified Call Numbers
+/*
+select distinct '0'||k.BIB_DOC||'UXU01' AS AlephBib, a.CN_SORT, a.CN_DISPLAY
+from SB.AL_CALL_NUMBER a
+join SB.AL_KEY_LINKS k on a.HOL_DOC_NUM = k.HOL_DOC
+where a.CN_STEM in(
+'GC  001', --(10)
+'GN  001', --(2)
+'HB  001', --(12)
+'HF  001', --(101)
+'HF  001.5', --(94)
+'HF  001.3', --(0)
+'HM  001', --(2)
+'HV  001', --(4)
+'HV  001.5', --(64)
+'99999'
+)
+order by a.CN_SORT
+*/
