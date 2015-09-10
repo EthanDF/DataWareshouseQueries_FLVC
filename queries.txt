@@ -65,3 +65,19 @@ where a.CN_STEM in(
 )
 order by a.CN_SORT
 */
+
+--Find records with both OCLC numbers and Vendor 035s held by FAU. In COOP
+/*
+select x.Z00R_DOC_NUMBER, x.Z00R_TEXT, y.Z00R_TEXT
+from UXU60.Z00R a
+join UXU60.Z00R b on a.Z00R_DOC_NUMBER = b.Z00R_DOC_NUMBER
+join UXU01.Z00R x on SUBSTR(a.Z00R_TEXT,instr(a.Z00R_TEXT,'$$b')+3,9) = x.Z00R_DOC_NUMBER
+join UXU01.Z00R y on x.Z00R_DOC_NUMBER = y.Z00R_DOC_NUMBER and x.Z00R_SEQUENCE != y.Z00R_SEQUENCE
+where 1=1
+and x.Z00R_FIELD_CODE = '035  '
+and substr(x.Z00R_TEXT,1,10) = '$$a(OCoLC)'
+and y.Z00R_FIELD_CODE = '035  '
+and a.Z00R_FIELD_CODE = 'LKR'
+and b.Z00R_FIELD_CODE = '8520 '
+and substr(b.Z00R_TEXT,instr(b.Z00R_TEXT, '$$b')+3,5) = 'FAUER'
+*/
