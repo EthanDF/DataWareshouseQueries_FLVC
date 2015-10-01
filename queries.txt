@@ -81,3 +81,15 @@ and a.Z00R_FIELD_CODE = 'LKR'
 and b.Z00R_FIELD_CODE = '8520 '
 and substr(b.Z00R_TEXT,instr(b.Z00R_TEXT, '$$b')+3,5) = 'FAUER'
 */
+
+--Query to find the eBook records with a particular vendor and ISBNs. Used for project MUSE when they gave us a list
+--of ISBNs that have been withdrawn from their platform. Possibly limited other applications.
+select a.BIB_DOC_NUM, a.ISBN, c.HOL_DOC_NUM, d.* 
+from SB.AL_ISBN a
+join SB.AL_KEY_LINKS b on a.BIB_DOC_NUM = b.BIB_DOC and b.INST = 'FA'
+join SB.AL_HOL_LOCN c on a.BIB_DOC_NUM = c.BIB_DOC_NUM and c.INST = 'FA' and c.COLL = 'ELEC'
+join SB.U01Z00R_856 d on d.Z00R_DOC_NUMBER = a.BIB_DOC_NUM and d.Z00R_TEXT like '%$5FBoU%' and d.Z00R_TEXT like '%muse%'
+where a.ISBN in(
+'9781438443485',
+..,
+'9780268033927')
