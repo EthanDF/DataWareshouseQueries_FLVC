@@ -9,6 +9,17 @@ where a.INST = 'FA'
 and b.Z00R_TEXT like '%purl.fcla.edu/FAU%'
 */
 
+--Alternate way to get ETDs
+/*
+SELECT a.ACC_SEQ, a.bib_doc_num, b.*
+from SB.AL_KEY_LINKS x 
+join SB.AL_AC_DOC_LINK y on x.BIB_DOC = y.BIB_DOC_NUM and y.ACC_SEQ = 16155658
+join SB.AL_AC_DOC_LINK a on x.BIB_DOC = a.BIB_DOC_NUM
+join SB.AL_HEADINGS b on a.ACC_SEQ = b.ACC_SEQ
+where 1=1
+and a.BIB_DOC_NUM = 31001009
+*/
+
 --Query to find records with both a CIS and OCoLC system number (035) and is only held by one school.
 --Note that the counts can be duplicated by a suppressed holdings
 --see also cis_bibs.csv
