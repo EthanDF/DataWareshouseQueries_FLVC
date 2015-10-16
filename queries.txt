@@ -20,6 +20,19 @@ where 1=1
 and a.BIB_DOC_NUM = 31001009
 */
 
+--Query to pull all Print Honors Theses in Jupiter for EA on 10/16/2015
+/*
+select 
+ b.BIB_DOC_NUM
+, b.SUB_LIB, b.COLL, a.CN_DISPLAY, a.CN_SORT
+from SB.AL_CALL_NUMBER a
+join SB.AL_HOL_LOCN b on a.HOL_DOC_NUM = b.HOL_DOC_NUM and b.SUB_LIB != 'FAUER'
+left join sb.al_sta c on b.hol_doc_num = c.HOL_DOC_NUM
+join SB.AL_TITLES t on b.BIB_DOC_NUM = t.BIB_DOC_NUM 
+where a.CN_STEM = 'NX   00.5'
+and c.HOL_DOC_NUM is null
+*/
+
 --Query to find records with both a CIS and OCoLC system number (035) and is only held by one school.
 --Note that the counts can be duplicated by a suppressed holdings
 --see also cis_bibs.csv
