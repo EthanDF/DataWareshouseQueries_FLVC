@@ -132,3 +132,43 @@ and substr(a.Z00R_FIELD_CODE,1,3) = '852'
 and a.Z00R_TEXT like '$$aFBoU$$bFAUER$$cELEC%'
 and i.Z30_ITEM_PROCESS_STATUS = '  '
 */
+
+
+--Query the LCSH Authority Database to find the narrower terms starting from a broader subject heading (goes two degrees, ie. Broad Term > (NT of Broad Term) > NT of (NT of Broad Term))
+/*Note that the Keys returns will correspond to LCA10 System numbers if you convert to INTs after removing the last 2 digits (left(key,len(key)-2)) */
+
+/*
+select --*
+a.Z101_REC_KEY, a.Z101_TEXT, b.Z103_REC_KEY, b.Z103_REC_KEY_1, b.Z103_LKR_TYPE, c.Z101_REC_KEY, c.Z101_TEXT
+,b2.Z103_REC_KEY, b2.Z103_REC_KEY_1, b2.Z103_LKR_TYPE, c2.Z101_REC_KEY, c2.Z101_TEXT
+from lca10.z101 a
+join lca10.z103 b on cast(SUBSTR(a.z101_REC_KEY,0,LENGTH(a.z101_REC_KEY)-2) as int) = b.z103_lkr_doc_number and b.z103_LKR_TYPE = 'BT'
+  left join lca10.z101 c on replace(b.Z103_REC_KEY_1,'LCA10') = SUBSTR(c.z101_REC_KEY,0,LENGTH(c.z101_REC_KEY)-2)
+left join lca10.z103 b2 on cast(SUBSTR(c.z101_REC_KEY,0,LENGTH(c.z101_REC_KEY)-2) as int) = b2.z103_lkr_doc_number and b2.z103_LKR_TYPE = 'BT'
+  left join lca10.z101 c2 on replace(b2.Z103_REC_KEY_1,'LCA10') = SUBSTR(c2.z101_REC_KEY,0,LENGTH(c2.z101_REC_KEY)-2)
+where 1=1
+and a.Z101_REC_KEY in('00030405301')
+----and Z101_TEXT = 'SURGERY'
+order by a.Z101_REC_KEY, c.Z101_REC_KEY
+*/
+
+Query to find all *books* (based on ISBN) in the FAUER collection with a given Subject Heading (or set of..)
+/*note that the publisher data is pulled from the MARC 260. Hence, any RDA records (Pub data in 264) will be missing the publisher data. Query could be expanded by removing join to AL_ISBN or altered for another collection. Query also filters out any suppressed records. */
+/*
+select distinct b.BIB_DOC_NUM, t.DISPLAY_TITLE, p.PUBLISHER, p.PUB_DATE
+from sb.al_ac_doc_link a
+join sb.al_hol_locn b on a.BIB_DOC_NUM = b.BIB_DOC_NUM
+join SB.AL_ISBN i on b.BIB_DOC_NUM = i.BIB_DOC_NUM
+left join SB.AL_TITLES t on b.BIB_DOC_NUM = t.BIB_DOC_NUM
+left join sb.al_pub p on b.BIB_DOC_NUM = p.BIB_DOC_NUM
+left join SB.AL_STA s on b.BIB_DOC_NUM = s.BIB_DOC_NUM and b.HOL_DOC_NUM = s.HOL_DOC_NUM 
+where a.acc_seq in(
+  select x.ACC_SEQ
+  from SB.AL_HEADINGS x
+  where x.AUT_DOC_NUM in(304053,1687))
+  and x.aut_tag = '150'
+)
+and b.INST = 'FA'
+and b.SUB_LIB = 'FAUER'
+and s.STA_VALUE is null
+  */
