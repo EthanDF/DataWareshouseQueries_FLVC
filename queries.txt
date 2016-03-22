@@ -172,3 +172,16 @@ and b.INST = 'FA'
 and b.SUB_LIB = 'FAUER'
 and s.STA_VALUE is null
   */
+
+--Query to find FBoU URLs (856s) with a space in the $u. Could be used for other attributes as well
+/*
+select a.Z00R_DOC_NUMBER, t.DISPLAY_TITLE
+, SUBSTR(a.Z00R_TEXT,INSTR(a.Z00R_TEXT,'$$u')+3,(INSTR(a.Z00R_TEXT,'$',INSTR(a.Z00R_TEXT,'$$u')+3))-(INSTR(a.Z00R_TEXT,'$$u')+3)) Subfield_U
+from SB.U01Z00R_856 a
+join SB.AL_HOL_LOCN b on a.Z00R_DOC_NUMBER = b.BIB_DOC_NUM
+join SB.AL_TITLES t on b.BIB_DOC_NUM = t.BIB_DOC_NUM
+where 1=1
+and SUBSTR(a.Z00R_TEXT,INSTR(a.Z00R_TEXT,'$$u')+3,(INSTR(a.Z00R_TEXT,'$',INSTR(a.Z00R_TEXT,'$$u')+3))-(INSTR(a.Z00R_TEXT,'$$u')+3)) like '% %'
+and a.Z00R_TEXT like '%$$5FBoU%'
+and b.SUB_LIB= 'FAUER';
+ */
