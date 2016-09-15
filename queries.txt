@@ -185,3 +185,16 @@ and SUBSTR(a.Z00R_TEXT,INSTR(a.Z00R_TEXT,'$$u')+3,(INSTR(a.Z00R_TEXT,'$',INSTR(a
 and a.Z00R_TEXT like '%$$5FBoU%'
 and b.SUB_LIB= 'FAUER';
  */
+
+--Query to find items,bibs,holdings for the Sierra migration - can be used to find where sub-library and collection combinations
+/*
+select a.INST3, a.ADM_DOC_NUM, a.BARCODE, a.SUB_LIB, a.COLL_CODE, a.STAFF_ID, a.BIB_DOC_NUM, a.HOL_DOC_NUM, a.UPDATE_DATE, s.STA_VALUE Bib_STA_VAL, t.STA_VALUE Hol_STA_VAL, k.HOL_DOC as keyLinksHOLDOC, h.SUB_LIB, h.COLL
+from SB.AL_ITEMS a
+left join SB.AL_STA s on a.BIB_DOC_NUM = s.BIB_DOC_NUM
+left join SB.AL_STA t on a.HOL_DOC_NUM = t.HOL_DOC_NUM
+left join SB.AL_KEY_LINKS k on a.BIB_DOC_NUM = k.BIB_DOC and k.INST = 'FA'
+left join SB.AL_HOL_LOCN h on k.HOL_DOC = h.HOL_DOC_NUM
+where a.SUB_LIB = 'FABOC'
+and a.COLL_CODE is null
+order by a.BIB_DOC_NUM
+*/
