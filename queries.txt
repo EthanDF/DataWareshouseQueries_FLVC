@@ -198,3 +198,14 @@ where a.SUB_LIB = 'FABOC'
 and a.COLL_CODE is null
 order by a.BIB_DOC_NUM
 */
+
+-- Query to find bibs from the admin record for a given university (FGCU in the example below). It also features a test to see if there is only a MARC $5 for the MARC 500 field for FGCU ("FFmFGC"). 
+select 
+a.Z103_REC_KEY, a.Z103_LKR_DOC_NUMBER, b.*
+from gcu50.z103 a
+join UXU01.Z00R b on CONCAT('0',cast (a.Z103_LKR_DOC_NUMBER as varchar(100))) = b.Z00R_DOC_NUMBER
+  and b.Z00R_FIELD_CODE = '500  '
+  and INSTR(b.Z00R_TEXT,'$$5FFmFGC') > 0
+  and INSTR(REPLACE(b.Z00R_TEXT,'$$5FFmFGC'),'$$5') = 0
+where 1=1
+and a.Z103_LKR_LIBRARY = 'UXU01'
