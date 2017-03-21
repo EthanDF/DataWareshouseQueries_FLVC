@@ -209,3 +209,10 @@ join UXU01.Z00R b on CONCAT('0',cast (a.Z103_LKR_DOC_NUMBER as varchar(100))) = 
   and INSTR(REPLACE(b.Z00R_TEXT,'$$5FFmFGC'),'$$5') = 0
 where 1=1
 and a.Z103_LKR_LIBRARY = 'UXU01'
+
+--Return the set of Ticklers (TKRs) in Aleph Holdings Data
+select a.Z30_REC_KEY, a.Z30_SUB_LIBRARY, a.Z30_MATERIAL, a.Z30_ITEM_STATUS, a.Z30_COLLECTION, a.Z30_HOL_DOC_NUMBER_X
+,b.Z00R_TEXT
+from fau50.z30 a
+join UXU60.Z00R b on a.Z30_HOL_DOC_NUMBER_X = b.Z00R_DOC_NUMBER
+where b.Z00R_FIELD_CODE = 'TKR'
