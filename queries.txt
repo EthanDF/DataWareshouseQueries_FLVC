@@ -216,3 +216,16 @@ select a.Z30_REC_KEY, a.Z30_SUB_LIBRARY, a.Z30_MATERIAL, a.Z30_ITEM_STATUS, a.Z3
 from fau50.z30 a
 join UXU60.Z00R b on a.Z30_HOL_DOC_NUMBER_X = b.Z00R_DOC_NUMBER
 where b.Z00R_FIELD_CODE = 'TKR'
+
+--Query for Suppressed Holdings with Unsuppressed Items per this subgroup https://ilsimp.wiki.flvc.org/wiki/index.php/Suppressed_Holdings_Subgroup
+
+select i.BIB_DOC_NUM, s.STA_VALUE,i.ADM_DOC_NUM, i.BARCODE, i.IPS, i.SUB_LIB, i.COLL_CODE, i.ITEM_MAT, i.DESCRIPT, i.NOTE_INTERNAL, i.TEMP_LOC
+from SB.AL_ITEMS i
+join SB.AL_HOL_STA_VW s on i.HOL_DOC_NUM = s.HOL_DOC and s.INST = 'FA'
+  and s.STA_VALUE is not null 
+where 1=1
+and i.INST = 'FA'
+and i.IPS is not null
+and i.IPS not in('SP')
+--and i.SUB_LIB = 'FABOC'
+--and i.COLL_CODE = 'GEN'
