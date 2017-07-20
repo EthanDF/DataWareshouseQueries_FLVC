@@ -217,6 +217,12 @@ from fau50.z30 a
 join UXU60.Z00R b on a.Z30_HOL_DOC_NUMBER_X = b.Z00R_DOC_NUMBER
 where b.Z00R_FIELD_CODE = 'TKR'
 
+--Return set of Ticklers without restriction of FAU50
+select a.Z00R_DOC_NUMBER as AlephHolding, a.Z00R_TEXT as TKR, replace(b.Z00R_TEXT,'$$aHOL$$lUXU01$$b') as AlephBib
+from UXU60.Z00R a
+join UXU60.Z00R b on a.Z00R_DOC_NUMBER =  b.Z00R_DOC_NUMBER and b.Z00R_FIELD_CODE = 'LKR'
+where a.Z00R_FIELD_CODE = 'TKR'
+
 --Query for Suppressed Holdings with Unsuppressed Items per this subgroup https://ilsimp.wiki.flvc.org/wiki/index.php/Suppressed_Holdings_Subgroup
 
 select i.BIB_DOC_NUM, s.STA_VALUE,i.ADM_DOC_NUM, i.BARCODE, i.IPS, i.SUB_LIB, i.COLL_CODE, i.ITEM_MAT, i.DESCRIPT, i.NOTE_INTERNAL, i.TEMP_LOC
